@@ -10,18 +10,24 @@
     </div>
     <div id="ProverbWidget">
         <h3>Remember:</h3>
-        <span id="currProverb"></span>
-        <button id="provNext" onclick="nextProverb">next</button>
+        <span id="currProverb"></span><br />
+        <button id="provNext" onclick="nextProverb()">next</button>
         <button id="provSearch">search</button>
     </div>
+    <br />
+    <div id="NotesWidget"></div>
     <div id="JosekiWidget">
         <!--The following is the open source eidogo-player open source application.  It is from http://eidogo.com/source-->
         <script type="text/javascript" src="eidogo-player-1.2/player/js/all.compressed.js"></script>
-        <div class="eidogo-player-auto">
+        <div class="eidogo-player-auto" id="GoBoard">
         </div>
     </div>
-    <div id="NotesWidget"></div>
-    <div id="NewsWidget"></div>
+    <div id="NewsWidget">
+        <span id="currNews"></span>
+        <br />
+        <button id="newsNext" onclick="nextNews()">next</button>
+        <button id="loadSgfNews" onclick="loadNewsSgf()" hidden="true">Load News .sgf</button>
+    </div>
     <script src="mainScripts.js" type="text/javascript"></script>
 </body>
 </html>
