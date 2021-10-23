@@ -27,6 +27,7 @@ const mainpage = "/main.html";
 
 
 exp_serv.get('/', function(req,res){
+	console.log(path.join(__dirname, mainpage));
 	res.sendFile(path.join(__dirname, mainpage));
 	    });
 

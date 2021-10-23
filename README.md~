@@ -8,5 +8,6 @@ First, you must have node.js installed on your machine.
 Run the following command from the directory where you cloned this repo:
 node GoStudyNode.js
 Do not stop the running of this node while you are using the application.
+When you are done using the app you can stop running the node by pressing ctrl-c in the terminal window you ran node from.
 
 Now open main.html in your browser of choice (ideally Chrome or Firefox)

@@ -23,14 +23,15 @@ const path = require('path');
 const exp_serv = express();
 
 const port = 3030;
-const mainpage = "/main.html";
+const mainpage = "/";
 
-
+/*
 exp_serv.get('/', function(req,res){
 	console.log(path.join(__dirname, mainpage));
 	res.sendFile(path.join(__dirname, mainpage));
 	    });
+*/
 
 exp_serv.listen(port, () => console.log(`listening on port ${port}`));
 
-//exp_serv.use(express.static("./" + mainpage));
+exp_serv.use(express.static("./"));

@@ -10,4 +10,5 @@ node GoStudyNode.js
 Do not stop the running of this node while you are using the application.
 When you are done using the app you can stop running the node by pressing ctrl-c in the terminal window you ran node from.
 
-Now open main.html in your browser of choice (ideally Chrome or Firefox)
+Now to use the application open your web browser (ideally firefox or chrome) and type as the url:
+localhost:3030
