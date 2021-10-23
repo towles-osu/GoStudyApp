@@ -1,0 +1,23 @@
+{
+  "name": "gostudyapp",
+  "version": "1.0.0",
+  "description": "Go Study App by Stew Towle",
+  "main": "GoStudyNode.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/towles-osu/GoStudyApp.git"
+  },
+  "author": "Stew Towle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/towles-osu/GoStudyApp/issues"
+  },
+  "homepage": "https://github.com/towles-osu/GoStudyApp#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "path": "^0.12.7"
+  }
+}
