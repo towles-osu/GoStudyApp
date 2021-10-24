@@ -23,9 +23,9 @@
         <h4>Personal Notes for Study</h4>
         <table id="NoteTable"></table>
         <form type="text" id="newNote"><label>New Note</label>
-        <span id="noteInput"><input type="text" /></span><button type="button" id="saveCurNote" onclick="saveNote()">Save</button></form>
+        <span ><input type="text" id="noteInput"></input></span><button type="button" id="saveCurNote" onclick="saveNote()">Add</button></form>
        
-        <br /><button id="saveNotes" onclick="saveToFile()">Save Session</button>
+        <br /><button id="saveNotes" onclick="saveToFile()" hidden="true">Save Session</button>
         <button id="loadNotes" onclick="loadFromFile()" hidden="true">Load Session</button>
     </div>
 
@@ -139,9 +139,13 @@
 
         function saveNote() {
             let note = document.getElementById("noteInput");
-            console.log(note.innerText);
-            //fileData.notes[fileData.notes.length] = note.innerText;
-            note.innerHTML = `<input type="text" />`;
+            console.log(note.value);
+            fileData.notes.push(note.value);
+            note.value = "";
+            let notesDisplay = document.getElementById("NoteTable");
+            let newNote = fileData.notes[fileData.notes.length - 1];
+            notesDisplay.append(addNoteRow(newNote, fileData.notes.length -1));
+            saveToFile();
             
         }
 
@@ -184,7 +188,7 @@
         //Given a json formatted data and file path saves the data to the file.
         function saveToFile(source = fileData) {
             let stringedData = JSON.stringify(source);
-            alert("Your data file is loading, please wait until file-loaded displays at the top of the app before using features");
+            //alert("Your data file is loading, please wait until file-loaded displays at the top of the app before using features");
             let request = new XMLHttpRequest();
             console.log('posting ' + stringedData);
             request.open('POST', '/save');
@@ -192,6 +196,44 @@
             request.send(stringedData);
         }
 
+        function addNoteRow(note, noteNum) {
+            let newRow = document.createElement("tr");
+            let noteCol = document.createElement("tc");
+            noteCol.innerText = note;
+            newRow.setAttribute("id", "note" + noteNum);
+            let editCol = document.createElement("tc");
+            let delCol = document.createElement("tc");
+            editCol.innerHTML = '<button class="edit" type="button">edit</button>';
+            editCol.firstChild.addEventListener('click', editRow);
+            delCol.innerHTML = '<button class="del" type="button">delete</button>';
+            delCol.firstChild.addEventListener('click', delRow);
+            newRow.append(noteCol);
+            newRow.append(editCol);
+            newRow.append(delCol);
+            //notesDisplay.append(newRow);
+            return newRow;
+        }
+
+        function delRow(event) {
+            //console.log("del", event);
+            let decision = confirm("Are you sure you want to delete: " + event.srcElement.parentNode.parentNode.firstChild.innerText);
+            if (decision) {
+                let noteRow = event.srcElement.parentNode.parentNode;
+                let elId = noteRow.id;
+                let index = elId.lastIndexOf("e") + 1;
+                let noteNumber = elId.slice(index);
+                index = parseInt(noteNumber);
+                console.log("deleting note ", index);
+                fileData.notes.splice(index, 1);
+                noteRow.remove();
+                saveToFile();
+            }
+        }
+
+        function editRow(event) {
+            
+            console.log(event.srcElement.parentNode.parentNode.id);//this is the note
+        }
         //
 
         async function loadFromFile(source = fileData) {
@@ -224,16 +266,27 @@
         }
 
 
+        function initNotes(source = fileData) {
+            let notesDisplay = document.getElementById("NoteTable");
+            for (note in source.notes) {
+                notesDisplay.append(addNoteRow(source.notes[note], note));
+            }
+        }
+
+
         //----------------Initializing App--------------------
 
         async function initialize() {
+            
+            fileData = await loadFromFile().then(data => {
+                return data;
+            });
             loadToolTips(toolTips);
             //loadJoseki(sgfFile);
             initProverbs(fileData);
             initNews(newsData);
-            fileData = await loadFromFile().then(data => {
-                return data;
-            });
+            initNotes(fileData);
+            
         }
 
 
