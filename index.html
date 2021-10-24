@@ -14,19 +14,25 @@
     <div id="ProverbWidget">
         <h4>Remember:</h4>
         <span id="currProverb"></span>
+        <br />
         <button id="provNext" onclick="nextProverb()">next</button>
         <button id="provSearch">search</button>
     </div>
     <br />
     <div id="NotesWidget">
         <h4>Personal Notes for Study</h4>
-        <button id="saveNotes" onclick="saveToFile()">Save Session</button>
-        <button id="loadNotes" onclick="loadFromFile()">Load Session</button>
+        <table id="NoteTable"></table>
+        <form type="text" id="newNote"><label>New Note</label>
+        <span id="noteInput"><input type="text" /></span><button type="button" id="saveCurNote" onclick="saveNote()">Save</button></form>
+       
+        <br /><button id="saveNotes" onclick="saveToFile()">Save Session</button>
+        <button id="loadNotes" onclick="loadFromFile()" hidden="true">Load Session</button>
     </div>
 
     <div id="NewsWidget">
         <h4>Latest Go News (from the AGA)</h4>
         <span id="currNews"></span>
+        <br />
  
         <button id="newsNext" onclick="nextNews()">next</button>
         <button id="loadSgfNews" onclick="loadNewsSgf()" hidden="true">Load News .sgf</button>
@@ -131,6 +137,14 @@
 
         }
 
+        function saveNote() {
+            let note = document.getElementById("noteInput");
+            console.log(note.innerText);
+            //fileData.notes[fileData.notes.length] = note.innerText;
+            note.innerHTML = `<input type="text" />`;
+            
+        }
+
         function nextNews(source = newsData) {
             source.currIndex = (source.currIndex + 1) % source.data.length;
             let curr_index = source.currIndex;
@@ -193,7 +207,7 @@
             const result = await fetch('/load', content);
             //console.log("result ", result.json());
             let obj_res = result.json();
-            console.log("obj made it back", obj_res);
+            //console.log("obj made it back", obj_res);
             return obj_res;
             //fileData = JSON.parse(result.body);
             /*

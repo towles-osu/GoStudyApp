@@ -48,7 +48,7 @@ function saveToFile(source) {
 //Given file path returns the json data as a string.
 function loadFromFile(source) {
     let data = fs.readFileSync(source);
-    console.log("internal", JSON.parse(data));
+    //console.log("internal", JSON.parse(data));
     return JSON.parse(data);
     
 }
@@ -66,7 +66,7 @@ exp_serv.get('/', function (req, res) {
 });
 
 exp_serv.post('/save', function (req, res, next) {
-    console.log(req.body);
+    //console.log(req.body);
     let response = saveToFile(req.body);
     res.send(response);
 });
@@ -75,7 +75,7 @@ exp_serv.post('/load', function (req, res, next) {
     console.log("loading from ", req.body.filePath);
    
     let response = loadFromFile(req.body.filePath);
-    console.log(response);
+    //console.log(response);
     res.send(JSON.stringify(response));
     
 });
