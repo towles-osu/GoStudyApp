@@ -1,9 +1,11 @@
 //Written by Stew Towle
 //Contains the script for operating the Go Study App main-page
 
-const sgfFile = "SaveData/alaska-beefstew.sgf";
-
 document.addEventListener("DOMContentLoaded", initialize);
+
+
+//----------Global Variables-----------------
+const sgfFile = "SaveData/alaska-beefstew.sgf";
 
 const toolTips = {
     ProverbWidget: "This widget displays proverbs you have saved to your personal proverbs and lessons.",
@@ -24,6 +26,9 @@ const fileData = {
     },
     joseki: {
 
+    },
+    notes: {
+
     }
 };
 
@@ -38,7 +43,14 @@ const newsData = {
             "(;FF[4]PB[Hinaya Rippo]HA[5]PW[Honinbo Dosaku]KM[0]RE[W+R]AB[dd][dp][jj][pd][pp]; W[qf]; B[mc]; W[qn]; B[ql]; W[on]; B[rp]; W[cn]; B[gq]; W[cf]; B[ch]; W[ef]; B[bd]; W[cj]; B[bf]; W[ce]; B[be]; W[cg]; B[bg]; W[cd]; B[cc]; W[dc]; B[ed]; W[ec]; B[fc]; W[cb]; B[bc]; W[fd]; B[fe]; W[gd]; B[ee]; W[gc]; B[fb]; W[eb]; B[dh]; W[ge]; B[ff]; W[eg]; B[gf]; W[eh]; B[he]; W[gb]; B[ei]; W[gh]; B[fi]; W[gg]; B[if]; W[jh]; B[hj]; W[hg]; B[hf]; W[kg]; B[ke]; W[bi]; B[bh]; W[dj]; B[bb]; W[kj]; B[kk]; W[lj]; B[lk]; W[jk]; B[jl]; W[ik]; B[ij]; W[il]; B[ki]; W[li]; B[kh]; W[lh]; B[ji]; W[jg]; B[lg]; W[lf]; B[mg]; W[je]; B[jf]; W[kf]; B[jd]; W[kd]; B[le]; W[ng]; B[mh]; W[ni]; B[nh]; W[oh]; B[og]; W[ld]; B[nf]; W[me]; B[nj]; W[jm]; B[qd]; W[qj]; B[np]; W[ro]; B[qp]; W[pg]; B[pk]; W[oj]; B[ok]; W[mi]; B[pj]; W[oi]; B[qi]; W[pi]; B[qh]; W[ph]; B[mn]; W[mk]; B[nm]; W[nl]; B[qk]; W[fk]; B[ek]; W[fl]; B[ej]; W[cp]; B[hi]; W[hh]; B[cl]; W[bl]; B[dn]; W[dm]; B[el]; W[do]; B[en]; W[eo]; B[fn]; W[cm]; B[hl]; W[hk]; B[gk]; W[kl]; B[im]; W[ll]; B[gl]; W[gp]; B[fo]; W[fp]; B[ep]; W[co]; B[fq]; W[hp]; B[hq]; W[ip]; B[jq]; W[om]; B[ol]; W[mo])"]
     ],
     currIndex: 0,
-    activeSearch : false};
+    activeSearch: false
+};
+
+const FILEPATH = "localSave.json";
+
+
+
+//--------------Utility Functions---------------
 
 function loadToolTips(tipsById) {
     for (const part in tipsById) {
@@ -106,8 +118,24 @@ function loadNewsSgf(source = newsData) {
 
 function loadNewsSgf() {
     alert("This functionality is not yet available.");
-};
+}
 
+
+function displayToInfoBox(text) {
+    document.getElementById("InfoDisplay").innerText = text;
+}
+
+//Given a json formatted data and file path saves the data to the file.
+function saveToFile(source = fileData, path = FILEPATH) {
+    let stringedData = JSON.stringify(fileData);
+    alert("Your data file is loading, please wait until file-loaded displays at the top of the app before using features");
+    let request = XMLHttpRequest('GET', '/save?path=' + path + '&data=' + stringedData, true);
+    request.send(null);
+}
+
+
+
+//----------------Initializing App--------------------
 
 function initialize() {
     loadToolTips(toolTips);
@@ -115,3 +143,5 @@ function initialize() {
     initProverbs(fileData);
     initNews(newsData);
 }
+
+
