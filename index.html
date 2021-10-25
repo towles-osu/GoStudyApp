@@ -14,6 +14,7 @@
     <div id="InfoWidget">
         <span id="InfoDisplay"></span>
     </div>
+    <br />
     <div id="ProverbWidget">
         <h4>Remember:</h4>
         <span id="currProverb"></span>
@@ -33,7 +34,7 @@
         <br /><button id="saveNotes" onclick="saveToFile()" hidden="true">Save Session</button>
         <button id="loadNotes" onclick="loadFromFile()" hidden="true">Load Session</button>
     </div>
-
+    <br />
     <div id="NewsWidget">
         <h4>Latest Go News (from the AGA)</h4>
         <span id="currNews"></span>
@@ -133,6 +134,7 @@
                     tooltip.setAttribute("class", "tooltiptext");
                     curr_block.append(tooltip);
                 }
+                //document.getElementsByTagName("tooltiptext").style.visibiltiy = ".tooltip: hover.tooltiptext {visibility: visible;}";
             }
             else {
                 for (const part in toolTips) {
@@ -144,6 +146,8 @@
                     
                     //curr_block.append(tooltip);
                 }
+                //document.getElementsByTagName("body").style += ".tooltip: hover.tooltiptext {visibility: hidden;}";
+
             }
         }
 
