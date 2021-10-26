@@ -12,15 +12,16 @@
         </div>
     </div>
     <div id="InfoWidget">
-        <span id="InfoDisplay"></span>
+        <span id="InfoDisplay"><button type="button" onclick="showTutorial()">View Instructions</button></span>
     </div>
     <br />
     <div id="ProverbWidget">
-        <h4>Remember:</h4>
+        <h4>Proverbs:</h4>
         <span id="currProverb"></span>
         <br />
         <button id="provNext" onclick="nextProverb()">next</button>
-        <button id="provSearch">search</button>
+        <button id="provSearch" onclick="provSearch()">search</button>
+        <button id="provDel" onclick="delCurProv()">delete</button>
     </div>
     <br />
     <div id="NotesWidget">
@@ -28,7 +29,7 @@
         <table id="NoteTable"></table>
         <form type="text" id="newNote">
             <label>New Note</label>
-            <span><input type="text" id="noteInput"></input></span><button type="button" id="saveCurNote" onclick="saveNote()">Add</button>
+            <span><input type="text" style="width: 400px" id="noteInput"></input></span><button type="button" id="saveCurNote" onclick="saveNote()">Add</button>
         </form>
 
         <br /><button id="saveNotes" onclick="saveToFile()" hidden="true">Save Session</button>
@@ -78,6 +79,8 @@
             ],
             currProv: 0,
             activeProvSearch: false,
+            currSearchProv: 0,
+            newProvSearch: false,
             notes: {
 
             },
@@ -89,6 +92,8 @@
             },
             filePath: "SaveData/localSave.json"
         };
+
+        let provSearchIndexList = [];
 
         //newsData object has data (storing the actual info), currIndex, activeSearch (boolean)
         //news stories in format array of arrays, each array is a news item.
@@ -103,6 +108,17 @@
             currIndex: 0,
             activeSearch: false
         };
+
+
+        let tutorial = [
+            "This application is an auto-saving locally hosted Go Study App.\n Use the tooltip toggle to turn tooltips on and off.",
+            "The Proverbs widget diplays a random proverb you have saved at initiation, and clicking next will cycle through proverbs.",
+            "If you click search you can search for proverbs containing a keyword.One will be diplayed, and clicking next will show additional proverbs that fit the search until there are no more that fit the search.",
+            "The Notes widget displays your current notes, with a number of buttons for editting and updating them.",
+            "You can make a note into a proverb, but it will still be saved as a note until you delete it from your notes.",
+            "This application as a whole auto-saves changes you make.",
+            "The news widget, though not functional in this beta version, displays current Go news headlines"
+        ];
 
         //const FILEPATH = "localSave.json";
 
@@ -157,22 +173,57 @@
 
         }
 
-        function initProverbs(source) {
+        function delCurProv(source = fileData) {
+            let decision = confirm("Are you sure you want to delete the proverb: " + source.proverbs[source.currProv]);
+            if (decision) {
+                source.proverbs.splice(source.currProv, 1);
+                source.activeProvSearch = false;
+                source.currSearchProv = 0;
+                source.newProvSearch = false;
+                source.currProv = Math.floor(Math.random() * source.proverbs.length);
+                nextProverb();
+            }
+        }
+
+        function initProverbs(source = fileData) {
+            console.log("init proverbs with", source);
             let curr_index = Math.floor(Math.random() * source.proverbs.length);
-            let span = document.getElementById("currProverb");
-            span.innerText = source.proverbs[curr_index];
-            source.proverbs.currProv = curr_index;
+            console.log(curr_index);
+            //let span = document.getElementById("currProverb");
+            //span.innerText = source.proverbs[curr_index];
+            source.currProv = curr_index;
+            nextProverb();
         }
 
         function nextProverb(source = fileData) {
             let span = document.getElementById("currProverb");
-            if (!source.activeProvSearch) {
-                //console.log(source.currProv);
+            if (source.activeProvSearch == false) {
+                console.log(source.currProv);
                 source.currProv++;
                 //console.log(source.currProv);
                 source.currProv = source.currProv % source.proverbs.length;
                 //console.log(source.currProv);
                 span.innerText = source.proverbs[source.currProv];
+            }
+            else {
+                if (source.newProvSearch) {
+                    source.newProvSearch = false;
+                    source.currSearchProv = 0;
+                    span.innerText = source.proverbs[provSearchIndexList[0]];
+                    source.currProv = provSearchIndexList[0];
+                    source.currSearchProv++;
+                }
+                else {
+                    if (source.currSearchProv < provSearchIndexList.length) {
+                        span.innerText = source.proverbs[provSearchIndexList[source.currSearchProv]];
+                        source.currProv = provSearchIndexList[source.currSearchProv];
+                        source.currSearchProv++;
+                    }
+                    else {
+                        source.activeProvSearch = false;
+                        nextProverb();
+                    }
+                }
             }
 
         }
@@ -194,6 +245,25 @@
             notesDisplay.append(addNoteRow(newNote, fileData.notes.length - 1));
             saveToFile();
 
+        }
+
+        function provSearch() {
+            let searchStr = prompt("Enter a word or phrase to search proverbs for.");
+            if (searchStr != null) {
+                provSearchIndexList = [];
+                for (let index = 0; index < fileData.proverbs.length; index++) {
+                    console.log(fileData.proverbs, index);
+                    if (fileData.proverbs[index].includes(searchStr)) {
+                        fileData.activeProvSearch = true;
+                        fileData.newProvSearch = true;
+                        provSearchIndexList.push(index);
+                    }
+                }
+                if (fileData.activeProvSearch == false) {
+                    alert("No matching proverb found.");
+                }
+                nextProverb();
+            }
         }
 
         function nextNews(source = newsData) {
@@ -232,6 +302,29 @@
             document.getElementById("InfoDisplay").innerText = text;
         }
 
+        function showTutorial() {
+            let tutorSpan = document.getElementById("InfoDisplay");
+            if (tutorSpan.firstChild.innerText == "View Instructions") {
+                for (let i = 0; i < tutorial.length; i++) {
+                    let newPar = document.createElement("p");
+                    newPar.innerText = tutorial[i];
+                    tutorSpan.append(newPar);
+                }
+                tutorSpan.firstChild.innerText = "Close Instructions";
+            }
+            else if (tutorSpan.firstChild.innerText == "Close Instructions") {
+                let curPar = tutorSpan.firstChild.nextSibling;
+                for (let i = 0; i < tutorial.length; i++) {
+                    let nextPar = curPar.nextSibling;
+                    curPar.remove();
+                    curPar = nextPar;
+                }
+                tutorSpan.firstChild.innerText = "View Instructions";
+                
+            }
+        }
+
+
         //Given a json formatted data and file path saves the data to the file.
         function saveToFile(source = fileData) {
             let stringedData = JSON.stringify(source);
@@ -245,20 +338,29 @@
 
         function addNoteRow(note, noteNum) {
             let newRow = document.createElement("tr");
-            let noteCol = document.createElement("tc");
-            noteCol.innerText = note;
+            let noteCol = document.createElement("td");
+            noteCol.append(document.createElement("div"));
+            noteCol.firstChild.innerText = note;
             newRow.setAttribute("id", "note" + noteNum);
-            let editCol = document.createElement("tc");
-            let delCol = document.createElement("tc");
+            let editCol = document.createElement("td");
+            let delCol = document.createElement("td");
+            let provCol = document.createElement("td");
             editCol.innerHTML = '<button class="edit" type="button">edit</button>';
             editCol.firstChild.addEventListener('click', editRow);
             delCol.innerHTML = '<button class="del" type="button">delete</button>';
             delCol.firstChild.addEventListener('click', delRow);
+            provCol.innerHTML = '<button class="mkProv" type="button">make proverb</button>';
+            provCol.firstChild.addEventListener('click', mkProv);
             newRow.append(noteCol);
             newRow.append(editCol);
             newRow.append(delCol);
-            //notesDisplay.append(newRow);
+            newRow.append(provCol);
             return newRow;
+        }
+
+        function mkProv(event) {
+            fileData.proverbs.push(event.srcElement.parentNode.parentNode.firstChild.firstChild.innerText);
+            saveToFile();
         }
 
         function delRow(event) {
@@ -279,9 +381,52 @@
 
         function editRow(event) {
 
-            console.log(event.srcElement.parentNode.parentNode.id);//this is the note
+            let noteRow = event.srcElement.parentNode.parentNode;//this is the note
+            console.log(noteRow, noteRow.firstChild);
+            console.log("setting content editable for", noteRow.firstChild.firstChild);
+            noteRow.firstChild.firstChild.setAttribute("contenteditable", "true");
+            let button = event.srcElement;
+            button.setAttribute("class", "saveNote");
+            button.innerText = "save";
+            button.removeEventListener("click", editRow);
+            button.addEventListener("click", saveRow);
+            button = document.createElement("button");
+            button.setAttribute("type", "button");
+            button.setAttribute("name", "revert");
+            button.innerText = "undo changes";
+            event.srcElement.parentNode.append(button);
+            button.addEventListener("click", revertNote);
         }
         //
+
+        function revertNote(event) {
+            let noteIndex = event.srcElement.parentNode.parentNode.id.slice(4);
+            let decision = confirm("Are you sure you want to undo all changes to this note?");
+            if (decision) {
+                let restoreContent = fileData.notes[noteIndex];
+                let dataBox = event.srcElement.parentNode;
+                dataBox.innerHTML = '<button class="edit" type="button">edit</button>';
+                dataBox.firstChild.addEventListener('click', editRow);
+                dataBox.parentNode.firstChild.firstChild.setAttribute("contenteditable", "false");
+                dataBox.parentNode.firstChild.firstChild.innerText = restoreContent;
+            }
+        }
+
+        function saveRow(event) {
+            let noteIndex = event.srcElement.parentNode.parentNode.id.slice(4);
+            //console.log(noteIndex);
+            let decision = confirm("Are you sure you want to save changes?");
+            if (decision) {
+                fileData.notes[noteIndex] = event.srcElement.parentNode.parentNode.firstChild.firstChild.innerText;
+                let dataBox = event.srcElement.parentNode;
+                //dataBox.firstChild.remove();
+                dataBox.innerHTML = '<button class="edit" type="button">edit</button>';
+                dataBox.firstChild.addEventListener('click', editRow);
+                //dataBox.append(editCol);
+                dataBox.parentNode.firstChild.firstChild.setAttribute("contenteditable", "false");
+                saveToFile();
+            }
+        }
 
         async function loadFromFile(source = fileData) {
             //let xm = new XMLHttpRequest();
@@ -296,7 +441,7 @@
             const result = await fetch('/load', content);
             //console.log("result ", result.json());
             let obj_res = result.json();
-            //console.log("obj made it back", obj_res);
+            console.log("obj made it back", obj_res);
             return obj_res;
             //fileData = JSON.parse(result.body);
             /*
@@ -325,14 +470,20 @@
 
         async function initialize() {
 
-            fileData = await loadFromFile().then(data => {
-                return data;
+            await loadFromFile().then(data => {
+       
+                fileData = data;
+                
+            }).then(() => {
+                console.log("current data", fileData);
+                loadToolTips(toolTips);
+                //loadJoseki(sgfFile);
+                initProverbs();
+                initNews(newsData);
+                initNotes();
             });
-            loadToolTips(toolTips);
-            //loadJoseki(sgfFile);
-            initProverbs(fileData);
-            initNews(newsData);
-            initNotes(fileData);
+            
+            
 
         }</script>
 
