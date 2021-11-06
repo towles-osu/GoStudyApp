@@ -21,6 +21,8 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const child_process = require('child_process');
+const file_path_to_news_service = 'NewsScraper/usgoScraper/main.py'
 
 const exp_serv = express();
 
@@ -78,6 +80,13 @@ exp_serv.post('/load', function (req, res, next) {
     //console.log(response);
     res.send(JSON.stringify(response));
     
+});
+
+exp_serv.post('/news', function (req, res, next) {
+    //This post function will generate the files for reading go news from
+    //Does so by calling teamates go news scraper microservice
+    let result = child_process.exec("python3 " + file_path_to_news_service);
+    console.log(result);
 });
 
 
