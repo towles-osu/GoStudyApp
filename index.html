@@ -488,8 +488,8 @@
             });
             await loadFromFile().then(data => {
        
-                fileData = data.main;
-                newsData.data = data.news;
+                fileData = data;
+                //newsData.data = data.news;
                 
             }).then(() => {
                 console.log("current data", fileData);

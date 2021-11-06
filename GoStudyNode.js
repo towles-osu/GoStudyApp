@@ -50,12 +50,11 @@ function saveToFile(source) {
 
 //Given file path returns the json data as a string.
 function loadFromFile(source) {
-    news_data = fs.readFileSync(file_path_to_news, "utf8");
-    console.log(news_data);
-    let data = {
-        main: fs.readFileSync(source),
-        news: ""
-    };
+    //news_data = fs.readFileSync(file_path_to_news, "utf8");
+    //console.log(news_data);
+    let data = fs.readFileSync(source);
+    
+    
     //console.log("internal", JSON.parse(data));
     return JSON.parse(data);
     
