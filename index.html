@@ -99,7 +99,7 @@
         //news stories in format array of arrays, each array is a news item.
         //sub-array is two to four parts, first element is headline, second is url, third is optional article content
         // and final is associated .sgf file as json style object
-        const newsData = {
+        let newsData = {
             data: [
                 ["Go Seigen is the original AlphaGo", "http://www.usgo.org", "There isn't much more to say than the title.  Go Seigen was using moves that AI would later use over 70 years before AI became stronger than humans"],
                 ["Blood vomit game is still being talked about", "http://www.go4go.net", "This is a famous game during which one of the players vomitted blood.",
@@ -466,13 +466,30 @@
         }
 
 
+        async function loadNews() {
+            //Calls subprocess to generate news data
+            const post_req = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: ""
+            };
+            let result = await fetch('/news', post_req);
+            let obj_res = result.json();
+            return obj_res;
+        }
+
+
         //----------------Initializing App--------------------
 
         async function initialize() {
 
+            await loadNews().then(x => {
+                //console.log(x);
+            });
             await loadFromFile().then(data => {
        
-                fileData = data;
+                fileData = data.main;
+                newsData.data = data.news;
                 
             }).then(() => {
                 console.log("current data", fileData);
@@ -487,7 +504,7 @@
 
         }</script>
 
-    <!--The following code for tooltips is based on (and copied from) https://www.w3schools.com/css/css_tooltip.asp-->
+    <!--The following code for tooltips is based on https://www.w3schools.com/css/css_tooltip.asp-->
     <style>
         .tooltip {
             position: relative;

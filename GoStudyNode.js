@@ -23,6 +23,7 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const child_process = require('child_process');
 const file_path_to_news_service = 'NewsScraper/usgoScraper/main.py'
+const file_path_to_news = 'usgonews.json'
 
 const exp_serv = express();
 
@@ -49,7 +50,12 @@ function saveToFile(source) {
 
 //Given file path returns the json data as a string.
 function loadFromFile(source) {
-    let data = fs.readFileSync(source);
+    news_data = fs.readFileSync(file_path_to_news, "utf8");
+    console.log(news_data);
+    let data = {
+        main: fs.readFileSync(source),
+        news: ""
+    };
     //console.log("internal", JSON.parse(data));
     return JSON.parse(data);
     
@@ -85,8 +91,10 @@ exp_serv.post('/load', function (req, res, next) {
 exp_serv.post('/news', function (req, res, next) {
     //This post function will generate the files for reading go news from
     //Does so by calling teamates go news scraper microservice
+    console.log("news called");
     let result = child_process.exec("python3 " + file_path_to_news_service);
-    console.log(result);
+    //console.log(result);
+    res.send(JSON.stringify(result));
 });
 
 
