@@ -479,6 +479,19 @@
         }
 
 
+        async function getNews() {
+            //This function makes a post request to retrieve the news data from the file it was saved to
+            const post_req = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: ""
+            };
+            let result = await fetch('/newsFile', post_req);
+            let obj_res = result.json();
+            return obj_res;
+        }
+
+
         //----------------Initializing App--------------------
 
         async function initialize() {
@@ -490,22 +503,54 @@
        
                 fileData = data;
                 //newsData.data = data.news;
+                console.log(fileData)
                 
             }).then(() => {
-                console.log("current data", fileData);
+                //console.log("current data", fileData);
                 loadToolTips(toolTips);
                 //loadJoseki(sgfFile);
                 initProverbs();
-                initNews(newsData);
+                
+                
                 initNotes();
             });
-            
+            let getNewsRes = await getNews();
+            console.log(getNewsRes);
+            for (index in getNewsRes) {
+                if (index < newsData.data.length) {
+                    //console.log(getNewsRes[index]);
+                    newsData.data[index] = [getNewsRes[index].Title, getNewsRes[index].Link, getNewsRes[index].Date];
+                }
+                else {
+                    newsData.data.push([getNewsRes[index].Title, getNewsRes[index].Link, getNewsRes[index].Date]);
+                }
+            }
+            initNews(newsData);
             
 
         }</script>
 
-    <!--The following code for tooltips is based on https://www.w3schools.com/css/css_tooltip.asp-->
+    <!--The code for tooltips is based on https://www.w3schools.com/css/css_tooltip.asp-->
     <style>
+        
+
+        td div {
+            max-width: 500px;
+        }
+
+        table {
+            border: dotted;
+        }
+
+        td {
+            border: solid;
+            padding: 5px;
+        }
+
+        #NewsWidget span {
+            width: 100px;
+        }
+
         .tooltip {
             position: relative;
             display: inline-block;
@@ -515,10 +560,10 @@
             .tooltip .tooltiptext {
                 visibility: hidden;
                 width: 120px;
-                background-color: black;
+                background-color: purple;
                 color: #fff;
                 text-align: center;
-                border-radius: 6px;
+                /*border-radius: 6px;
                 padding: 5px 0;
                 /* Position the tooltip */
                 position: absolute;

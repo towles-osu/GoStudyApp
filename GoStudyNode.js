@@ -22,8 +22,15 @@ const path = require('path');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const child_process = require('child_process');
-const file_path_to_news_service = 'NewsScraper/usgoScraper/main.py'
-const file_path_to_news = 'usgonews.json'
+const waitOn = require('wait-on');
+const file_path_to_news_service = 'NewsScraper/usgoScraper/goNewsScraper.py'
+const file_path_to_news = 'usgoNews.json';
+const waitOptions = {
+    resources: [file_path_to_news],
+    delay: 500,
+    simultaneous: 1,
+    timeout: 30000
+};
 
 const exp_serv = express();
 
@@ -51,12 +58,14 @@ function saveToFile(source) {
 //Given file path returns the json data as a string.
 function loadFromFile(source) {
     //news_data = fs.readFileSync(file_path_to_news, "utf8");
-    //console.log(news_data);
+    //console.log(news_data)
+
     let data = fs.readFileSync(source);
+    return JSON.parse(data);
     
     
     //console.log("internal", JSON.parse(data));
-    return JSON.parse(data);
+    
     
 }
 
@@ -94,6 +103,20 @@ exp_serv.post('/news', function (req, res, next) {
     let result = child_process.exec("python3 " + file_path_to_news_service);
     //console.log(result);
     res.send(JSON.stringify(result));
+});
+
+exp_serv.post('/newsFile', function (req, res, next) {
+    //This post function read the file information on news and returns it as a json
+    waitOn(waitOptions, function (err) {
+        if (err) {
+            console.log("wait-on issue", err);
+        }
+        console.log("waited on file");
+        let newsData = loadFromFile(file_path_to_news);
+        //console.log(newsData);
+        res.send(JSON.stringify(newsData));
+    });
+    
 });
 
 
