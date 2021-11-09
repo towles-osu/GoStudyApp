@@ -38,7 +38,7 @@
     <br />
     <div id="NewsWidget">
         <h4>Latest Go News (from the AGA)</h4>
-        <span id="currNews">News Data is loading....</span>
+        <span id="currNews"></span>
         <br />
 
         <button id="newsNext" onclick="nextNews()">next</button>
