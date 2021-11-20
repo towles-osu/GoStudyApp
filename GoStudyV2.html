@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Go/Baduk Study App</title>
+</head>
+<body>
+    <div id="MainTitle" class="pageHeader">
+        <h2>Go Study App</h2>
+        <div id="ToolTipController">
+            <input type="checkbox" id="ToolTipCheck" checked value="tooltip" onchange="toolTipChange(this)" /><label for="ToolTipCheck">Tooltips</label>
+        </div>
+    </div>
+    <div id="InfoWidget">
+        <span id="InfoDisplay"><button type="button" onclick="showTutorial()">View Instructions</button></span>
+    </div>
+    <br />
+    <div id="ProverbWidget">
+        <h4>Proverbs:</h4>
+        <span id="currProverb"></span>
+        <br />
+        <button id="provNext" onclick="nextProverb()">next</button>
+        <button id="provSearch" onclick="provSearch()">search</button>
+        <button id="provDel" onclick="delCurProv()">delete</button>
+    </div>
+    <br />
+    <div id="NotesWidget">
+        <h4>Personal Notes for Study</h4>
+        <table id="NoteTable"></table>
+        <form type="text" id="newNote">
+            <label>New Note</label>
+            <span><input type="text" style="width: 400px" id="noteInput"></input></span><button type="button" id="saveCurNote" onclick="saveNote()">Add</button>
+        </form>
+
+        <br /><button id="saveNotes" onclick="saveToFile()" hidden="true">Save Session</button>
+        <button id="loadNotes" onclick="loadFromFile()" hidden="true">Load Session</button>
+    </div>
+    <br />
+    <div id="NewsWidget">
+        <h4>Latest Go News (from the AGA)</h4>
+        <span id="currNews">News Data is loading....</span>
+        <br />
+
+        <button id="newsNext" onclick="nextNews()">next</button>
+        <button id="loadSgfNews" onclick="loadNewsSgf()" hidden="true">Load News .sgf</button>
+    </div>
+    <script src="goStudyV2.js"></script>
+</body>
+</html>
