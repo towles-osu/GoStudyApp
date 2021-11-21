@@ -31,6 +31,25 @@ function loadFile(source) {
     return JSON.parse(data);
 }
 
+function saveFile(path, data) {
+    fs.writeFileSync(path, JSON.stringify(data));
+    console.log("saved to file", path, data);
+}
+
+function getNews() {
+    let result = child_process.exec("python3 " + file_path_to_news_service);
+    return new Promise((resolve, reject) => {
+        waitOn(waitOptions, function (err) {
+            if (err) {
+                console.log("wait-on issue", err);
+                return reject(err);
+            }
+            let fileData = loadFile(file_path_to_news);
+            return resolve(fileData);
+        })
+    });
+}
+
 app.get('/', function (req, res) {
     console.log("get called");
     res.send("this app uses post not get requests.")
@@ -44,10 +63,24 @@ app.post('/', (req, res, next) => {
 });
 
 
-app.post('/load', (req, res, next) => {
+app.post('/load', async (req, res, next) => {
     if (req.body.type == "loadSave") {
         let file_data = loadFile(req.body.file_path);
         res.send(JSON.stringify(file_data));
+    }
+    else if (req.body.type == "loadNews") {
+        let newsData = await getNews();
+        console.log("got past news function");
+        res.send(JSON.stringify(newsData));
+
+    }
+
+});
+
+app.post('/save', (req, res, next) => {
+    if (req.body.type == "saveAll") {
+        console.log("saving to file");
+        saveFile(req.body.file_path, req.body.data);
     }
 
 });
