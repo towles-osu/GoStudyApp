@@ -15,6 +15,114 @@ let newsData = {
 document.addEventListener("DOMContentLoaded", initialize);
 
 
+
+function mkProv(event) {
+    studyData.proverbs.push(event.srcElement.parentNode.parentNode.firstChild.firstChild.innerText);
+    saveToFile();
+}
+
+function delCurProv(source = studyData) {
+    let decision = confirm("Are you sure you want to delete the proverb: " + source.proverbs[source.currProv]);
+    if (decision) {
+        source.proverbs.splice(source.currProv, 1);
+        source.activeProvSearch = false;
+        source.currSearchProv = 0;
+        source.newProvSearch = false;
+        source.currProv = Math.floor(Math.random() * source.proverbs.length);
+        nextProverb();
+    }
+}
+
+function initProverbs(source = studyData) {
+    console.log("init proverbs with", source);
+    let curr_index = Math.floor(Math.random() * source.proverbs.length);
+    console.log(curr_index);
+    source.currProv = curr_index;
+    nextProverb();
+}
+
+function nextProverb(source = studyData) {
+    let span = document.getElementById("currProverb");
+    if (source.activeProvSearch == false) {
+        console.log(source.currProv);
+        source.currProv++;
+        //console.log(source.currProv);
+        source.currProv = source.currProv % source.proverbs.length;
+        //console.log(source.currProv);
+        span.innerText = source.proverbs[source.currProv];
+    }
+    else {
+        pickNextProvWithSearch(source, span);
+    }
+}
+
+function pickNextProvWithSearch(source, span) {
+    if (source.newProvSearch) {
+        source.newProvSearch = false;
+        source.currSearchProv = 0;
+        span.innerText = source.proverbs[provSearchIndexList[0]];
+        source.currProv = provSearchIndexList[0];
+        source.currSearchProv++;
+    }
+    else {
+        if (source.currSearchProv < provSearchIndexList.length) {
+            span.innerText = source.proverbs[provSearchIndexList[source.currSearchProv]];
+            source.currProv = provSearchIndexList[source.currSearchProv];
+            source.currSearchProv++;
+        }
+        else {
+            source.activeProvSearch = false;
+            nextProverb();
+        }
+    }
+}
+
+function provSearch() {
+    let searchStr = prompt("Enter a word or phrase to search proverbs for.");
+    if (searchStr != null) {
+        provSearchIndexList = [];
+        for (let index = 0; index < studyData.proverbs.length; index++) {
+            if (studyData.proverbs[index].toLowerCase().includes(searchStr.toLowerCase())) {
+                studyData.activeProvSearch = true;
+                studyData.newProvSearch = true;
+                provSearchIndexList.push(index);
+            }
+        }
+        if (studyData.activeProvSearch == false) {
+            alert("No matching proverb found.");
+        }
+        nextProverb();
+    }
+}
+
+function initNews(source = newsData) {
+    let curr_index = Math.floor(Math.random() * source.data.length);
+    source.currIndex = curr_index;
+    nextNews();
+
+}
+
+function nextNews(source = newsData) {
+    source.currIndex = (source.currIndex + 1) % source.data.length;
+    let curr_index = source.currIndex;
+    let span = document.getElementById("currNews");
+    span.innerHTML = source.data[curr_index]["Title"] + "</br>" + source.data[curr_index]["Date"];
+    let link = document.createElement("a");
+    link.href = source.data[curr_index]["Link"];
+    link.innerText = "Go to original article.";
+    span.append(document.createElement("br"));
+    span.append(link);
+    /*
+    if (source.data[curr_index].length > 3) {
+        document.getElementById("loadSgfNews").hidden = true;//change this to true to renable loadNewsSgf
+    }
+    else {
+        document.getElementById("loadSgfNews").hidden = true;
+    }
+    */
+    source.currIndex = curr_index;
+}
+
 function initNotes(source = studyData) {
     let notesDisplay = document.getElementById("NoteTable");
     for (note in source.notes) {
@@ -44,90 +152,16 @@ function addNoteRow(note, noteNum) {
     return newRow;
 }
 
-function mkProv(event) {
-    studyData.proverbs.push(event.srcElement.parentNode.parentNode.firstChild.firstChild.innerText);
+function saveNote() {
+    let note = document.getElementById("noteInput");
+    console.log(note.value);
+    studyData.notes.push(note.value);
+    note.value = "";
+    let notesDisplay = document.getElementById("NoteTable");
+    let newNote = studyData.notes[studyData.notes.length - 1];
+    notesDisplay.append(addNoteRow(newNote, studyData.notes.length - 1));
     saveToFile();
-}
 
-function delCurProv(source = studyData) {
-    let decision = confirm("Are you sure you want to delete the proverb: " + source.proverbs[source.currProv]);
-    if (decision) {
-        source.proverbs.splice(source.currProv, 1);
-        source.activeProvSearch = false;
-        source.currSearchProv = 0;
-        source.newProvSearch = false;
-        source.currProv = Math.floor(Math.random() * source.proverbs.length);
-        nextProverb();
-    }
-}
-
-function initProverbs(source = studyData) {
-    console.log("init proverbs with", source);
-    let curr_index = Math.floor(Math.random() * source.proverbs.length);
-    console.log(curr_index);
-    //let span = document.getElementById("currProverb");
-    //span.innerText = source.proverbs[curr_index];
-    source.currProv = curr_index;
-    nextProverb();
-}
-
-function nextProverb(source = studyData) {
-    let span = document.getElementById("currProverb");
-    if (source.activeProvSearch == false) {
-        console.log(source.currProv);
-        source.currProv++;
-        //console.log(source.currProv);
-        source.currProv = source.currProv % source.proverbs.length;
-        //console.log(source.currProv);
-        span.innerText = source.proverbs[source.currProv];
-    }
-    else {
-        if (source.newProvSearch) {
-            source.newProvSearch = false;
-            source.currSearchProv = 0;
-            span.innerText = source.proverbs[provSearchIndexList[0]];
-            source.currProv = provSearchIndexList[0];
-            source.currSearchProv++;
-        }
-        else {
-            if (source.currSearchProv < provSearchIndexList.length) {
-                span.innerText = source.proverbs[provSearchIndexList[source.currSearchProv]];
-                source.currProv = provSearchIndexList[source.currSearchProv];
-                source.currSearchProv++;
-            }
-            else {
-                source.activeProvSearch = false;
-                nextProverb();
-            }
-        }
-    }
-
-}
-
-function initNews(source = newsData) {
-    let curr_index = Math.floor(Math.random() * source.data.length);
-    source.currIndex = curr_index;
-    nextNews();
-
-}
-
-function nextNews(source = newsData) {
-    source.currIndex = (source.currIndex + 1) % source.data.length;
-    let curr_index = source.currIndex;
-    let span = document.getElementById("currNews");
-    span.innerHTML = source.data[curr_index]["Title"] + "</br>" + source.data[curr_index]["Date"];
-    let link = document.createElement("a");
-    link.href = source.data[curr_index]["Link"];
-    link.innerText = "Go to original article.";
-    span.append(document.createElement("br"));
-    span.append(link);
-    if (source.data[curr_index].length > 3) {
-        document.getElementById("loadSgfNews").hidden = true;//change this to true to renable loadNewsSgf
-    }
-    else {
-        document.getElementById("loadSgfNews").hidden = true;
-    }
-    source.currIndex = curr_index;
 }
 
 function delRow(event) {
@@ -188,7 +222,7 @@ function saveRow(event) {
         let dataBox = event.srcElement.parentNode;
         dataBox.innerHTML = '<button class="edit" type="button">edit</button>';
         dataBox.firstChild.addEventListener('click', editRow);
-
+        saveToFile();
     }
 }
 
