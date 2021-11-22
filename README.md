@@ -9,12 +9,12 @@ Once you have cloned this repository and installed node, run the following comma
 npm install
 
 Run the following command from the directory where you cloned this repo:
-node GoStudyNode.js
+node GoStudyNodeV2.js
 Do not stop the running of this node while you are using the application.
 When you are done using the app you can stop running the node by pressing ctrl-c in the terminal window you ran node from.
 
-Now to use the application open your web browser (ideally firefox or chrome) and input the url:
-localhost:3030
+
+Now you can use the study app by opening the file "GoStudyV2.html" with your browser of choice.
 
 
 Go Study App is an auto-saving application designed for a single user.  There is not functionality for multiple different
