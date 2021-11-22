@@ -15,6 +15,28 @@ let newsData = {
 document.addEventListener("DOMContentLoaded", initialize);
 
 
+function showTutorial() {
+    
+    let tutorial = document.getElementById("tutorialText");
+    console.log("tutorial clicked", tutorial.hidden);
+    tutorial.hidden = (tutorial.hidden) ? false : true;
+}
+
+function toolTipChange(checkbox) {
+    if (checkbox.checked) {
+        let tooltipped = document.querySelectorAll(".notip");
+        console.log("adding tip", tooltipped)
+        for (node in tooltipped) {
+            tooltipped[node].className ="tip";
+        }
+    } else {
+        let tooltipped = document.querySelectorAll(".tip");
+        console.log("removing tip", tooltipped)
+        for (node in tooltipped) {
+            tooltipped[node].className = "notip";
+        }
+    }
+}
 
 function mkProv(event) {
     studyData.proverbs.push(event.srcElement.parentNode.parentNode.firstChild.firstChild.innerText);

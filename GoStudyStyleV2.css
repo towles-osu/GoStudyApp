@@ -1,0 +1,27 @@
+﻿body {
+    
+}
+
+.tip {
+    position: relative;
+    display: inline-block;
+}
+
+.tiptext {
+    visibility: hidden;
+}
+
+.tip .tiptext {
+    width: 110px;
+    background-color: purple;
+    color: white;
+    text-align: center;
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    left: 105%;
+}
+
+.tip:hover .tiptext {
+    visibility: visible;
+}

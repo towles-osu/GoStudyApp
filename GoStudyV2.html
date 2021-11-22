@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Go/Baduk Study App</title>
+    <link rel="stylesheet" href="GoStudyStyleV2.css" >
 </head>
 <body>
     <div id="MainTitle" class="pageHeader">
@@ -13,18 +14,29 @@
     </div>
     <div id="InfoWidget">
         <span id="InfoDisplay"><button type="button" onclick="showTutorial()">View Instructions</button></span>
+        <span id="tutorialText" hidden="true">
+            <p>This application is an auto-saving locally hosted Go Study App.\n Use the tooltip toggle to turn tooltips on and off.</p>
+            <p>The Proverbs widget diplays a random proverb you have saved at initiation, and clicking next will cycle through proverbs.</p>
+            <p>If you click search you can search for proverbs containing a keyword.One will be diplayed, and clicking next will show additional proverbs that fit the search until there are no more that fit the search.</p>
+            <p>The Notes widget displays your current notes, with a number of buttons for editting and updating them.</p>
+            <p>You can make a note into a proverb, but it will still be saved as a note until you delete it from your notes.</p>
+            <p>This application as a whole auto-saves changes you make.</p>
+            <p>The news widget displays current Go news headlines from the American Go Association Website.</p>
+            <p><b>Make sure to run the GoStudyNodeV2.js with nodejs in order to use this app!</b></p>
+        </span>
     </div>
     <br />
-    <div id="ProverbWidget">
+    <div class="tip" id="ProverbWidget">
         <h4>Proverbs:</h4>
         <span id="currProverb"></span>
         <br />
         <button id="provNext" onclick="nextProverb()">next</button>
         <button id="provSearch" onclick="provSearch()">search</button>
         <button id="provDel" onclick="delCurProv()">delete</button>
+        <span class="tiptext">This widget displays proverbs you have saved to your personal proverbs and lessons.</span>
     </div>
     <br />
-    <div id="NotesWidget">
+    <div id="NotesWidget" class="tip">
         <h4>Personal Notes for Study</h4>
         <table id="NoteTable"></table>
         <form type="text" id="newNote">
@@ -34,15 +46,19 @@
 
         <br /><button id="saveNotes" onclick="saveToFile()" hidden="true">Save Session</button>
         <button id="loadNotes" onclick="loadFromFile()" hidden="true">Load Session</button>
+
+        <span class="tiptext">Use this area to view and edit Notes you have about Go.</span>
+
     </div>
     <br />
-    <div id="NewsWidget">
+    <div id="NewsWidget" class="tip">
         <h4>Latest Go News (from the AGA)</h4>
         <span id="currNews">News Data is loading....</span>
         <br />
 
         <button id="newsNext" onclick="nextNews()">next</button>
         <button id="loadSgfNews" onclick="loadNewsSgf()" hidden="true">Load News .sgf</button>
+        <span class="tiptext">This area displays the headlines of recent articles from the American Go Association with a link to the article.</span>
     </div>
     <script src="goStudyV2.js"></script>
 </body>
