@@ -51,6 +51,7 @@ function delCurProv(source = studyData) {
         source.currSearchProv = 0;
         source.newProvSearch = false;
         source.currProv = Math.floor(Math.random() * source.proverbs.length);
+        saveToFile();
         nextProverb();
     }
 }
