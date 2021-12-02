@@ -69,9 +69,7 @@ function nextProverb(source = studyData) {
     if (source.activeProvSearch == false) {
         console.log(source.currProv);
         source.currProv++;
-        //console.log(source.currProv);
         source.currProv = source.currProv % source.proverbs.length;
-        //console.log(source.currProv);
         span.innerText = source.proverbs[source.currProv];
     }
     else {
@@ -135,14 +133,6 @@ function nextNews(source = newsData) {
     link.innerText = "Go to original article.";
     span.append(document.createElement("br"));
     span.append(link);
-    /*
-    if (source.data[curr_index].length > 3) {
-        document.getElementById("loadSgfNews").hidden = true;//change this to true to renable loadNewsSgf
-    }
-    else {
-        document.getElementById("loadSgfNews").hidden = true;
-    }
-    */
     source.currIndex = curr_index;
 }
 
@@ -188,7 +178,6 @@ function saveNote() {
 }
 
 function delRow(event) {
-    //console.log("del", event);
     let decision = confirm("Are you sure you want to delete: " + event.srcElement.parentNode.parentNode.firstChild.innerText);
     if (decision) {
         let noteRow = event.srcElement.parentNode.parentNode;
