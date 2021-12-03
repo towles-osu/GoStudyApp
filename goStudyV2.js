@@ -3,7 +3,7 @@
 //Port is set as 4242 for running this app from localhost
 
 //Change this if you change the port you are using in GoStudyNodeV2.js
-const node_url = "http://localhost:4242/"; 
+const nodeUrl = "http://localhost:4242/"; 
 let studyData = {};
 const saveFilePath = "SaveData/localSave.json";
 let newsData = {
@@ -54,8 +54,8 @@ function delCurProv(source = studyData) {
 }
 
 function initProverbs(source = studyData) {
-    let curr_index = Math.floor(Math.random() * source.proverbs.length);
-    source.currProv = curr_index;
+    let currIndex = Math.floor(Math.random() * source.proverbs.length);
+    source.currProv = currIndex;
     nextProverb();
 }
 
@@ -111,23 +111,23 @@ function provSearch() {
 }
 
 function initNews(source = newsData) {
-    let curr_index = Math.floor(Math.random() * source.data.length);
-    source.currIndex = curr_index;
+    let currIndex = Math.floor(Math.random() * source.data.length);
+    source.currIndex = currIndex;
     nextNews();
 
 }
 
 function nextNews(source = newsData) {
     source.currIndex = (source.currIndex + 1) % source.data.length;
-    let curr_index = source.currIndex;
+    let currIndex = source.currIndex;
     let span = document.getElementById("currNews");
-    span.innerHTML = source.data[curr_index]["Title"] + "</br>" + source.data[curr_index]["Date"];
+    span.innerHTML = source.data[currIndex]["Title"] + "</br>" + source.data[currIndex]["Date"];
     let link = document.createElement("a");
-    link.href = source.data[curr_index]["Link"];
+    link.href = source.data[currIndex]["Link"];
     link.innerText = "Go to original article.";
     span.append(document.createElement("br"));
     span.append(link);
-    source.currIndex = curr_index;
+    source.currIndex = currIndex;
 }
 
 function initNotes(source = studyData) {
@@ -228,11 +228,11 @@ function saveRow(event) {
 }
 
 
-function post_req_gen(body_fields) {
+function postReqGen(bodyFields) {
     return {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body_fields)
+        body: JSON.stringify(bodyFields)
     };
 }
 
@@ -243,13 +243,13 @@ function populateWidgets() {
 }
 
 async function saveToFile() {
-    let saveResults = await fetch(node_url + "save", post_req_gen({ type: "saveAll", "file_path": saveFilePath, data: studyData }));
+    let saveResults = await fetch(nodeUrl + "save", postReqGen({ type: "saveAll", "file_path": saveFilePath, data: studyData }));
 }
 
 async function initialize() {
-    const loadResult = await fetch(node_url + "load", post_req_gen({ "file_path": saveFilePath, type: "loadSave" }));
+    const loadResult = await fetch(nodeUrl + "load", postReqGen({ "file_path": saveFilePath, type: "loadSave" }));
     studyData = await loadResult.json();
-    const loadNews = await fetch(node_url + "load", post_req_gen({ type: "loadNews" }));
+    const loadNews = await fetch(nodeUrl + "load", postReqGen({ type: "loadNews" }));
     newsData.data = await loadNews.json();
     populateWidgets(); 
 }
