@@ -2,7 +2,8 @@
 //This file provides the front-end javascript for running the go study app.
 //Port is set as 4242 for running this app from localhost
 
-const node_url = "http://localhost:4242/";
+//Change this if you change the port you are using in GoStudyNodeV2.js
+const node_url = "http://localhost:4242/"; 
 let studyData = {};
 const saveFilePath = "SaveData/localSave.json";
 let newsData = {

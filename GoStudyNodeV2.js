@@ -1,7 +1,7 @@
 ﻿//Stew Towle
 //This is the js to be run by nodejs to provide the backend functionality for using GoStudyV2.html
 
-//Imports of the modules we use and setup for them
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -18,7 +18,8 @@ const waitOptions = {
 };
 
 const app = express();
-const port = 4242;
+const port = 4242;  //Change this if you wish to use a different port to run the service
+                    //Note, you must also change the port at the top of goStudyV2.js
 app.set('port', port);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -51,15 +52,7 @@ function getNews() {
 }
 
 app.get('/', function (req, res) {
-    console.log("get called");
     res.send("this app uses post not get requests.")
-});
-
-app.post('/', (req, res, next) => {
-    //This is basic test function to check if everything works for post request
-    if (req.body.type == "basic") {
-        res.send(JSON.stringify({ "port": port, "message": "when in doubt tenuki" }));
-    }
 });
 
 
@@ -70,7 +63,6 @@ app.post('/load', async (req, res, next) => {
     }
     else if (req.body.type == "loadNews") {
         let newsData = await getNews();
-        console.log("got past news function");
         res.send(JSON.stringify(newsData));
 
     }
@@ -79,13 +71,10 @@ app.post('/load', async (req, res, next) => {
 
 app.post('/save', (req, res, next) => {
     if (req.body.type == "saveAll") {
-        console.log("saving to file");
         saveFile(req.body.file_path, req.body.data);
     }
 
 });
-
-
 
 app.use(function (req, res) {
     res.status(404);
