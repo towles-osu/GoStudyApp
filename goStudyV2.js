@@ -117,8 +117,8 @@ function initNews(source = newsData) {
 
 }
 
-function nextNews(source = newsData) {
-    source.currIndex = (source.currIndex + 1) % source.data.length;
+function incrementNews(incrementAmt, source = newsData) {
+    source.currIndex = (source.currIndex + incrementAmt) % source.data.length;
     let currIndex = source.currIndex;
     let span = document.getElementById("currNews");
     span.innerHTML = source.data[currIndex]["Title"] + "</br>" + source.data[currIndex]["Date"];
@@ -127,7 +127,14 @@ function nextNews(source = newsData) {
     link.innerText = "Go to original article.";
     span.append(document.createElement("br"));
     span.append(link);
-    source.currIndex = currIndex;
+}
+
+function nextNews(source = newsData) {
+    incrementNews(1, source);
+}
+
+function prevNews(source = newsData) {
+    incrementNews(-1, source);
 }
 
 function initNotes(source = studyData) {
@@ -183,7 +190,6 @@ function delRow(event) {
         saveToFile();
     }
 }
-
 
 function editRow(event) {
     let noteRow = event.srcElement.parentNode.parentNode;

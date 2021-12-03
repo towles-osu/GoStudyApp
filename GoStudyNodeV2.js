@@ -40,7 +40,10 @@ function deleteOldNews() {
         fs.unlinkSync(file_path_to_news);
     }
     catch (err) {
-        console.log(err);
+        //ENOENT error means there was no file to delete, which is fine.
+        if (err.code != 'ENOENT') {
+            console.log(err);
+        }
     }
 }
 

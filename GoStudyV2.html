@@ -15,13 +15,15 @@
     <div id="InfoWidget">
         <span id="InfoDisplay"><button type="button" onclick="showTutorial()">View Instructions</button></span>
         <span id="tutorialText" hidden="true">
-            <p>This application is an auto-saving locally hosted Go Study App.\n Use the tooltip toggle to turn tooltips on and off.</p>
+            <p><b>This application is an auto-saving locally hosted Go Study App.</b></p>
+            <p>Use the tooltip toggle to turn tooltips on and off.</p>
             <p>The Proverbs widget diplays a random proverb you have saved at initiation, and clicking next will cycle through proverbs.</p>
             <p>If you click search you can search for proverbs containing a keyword.One will be diplayed, and clicking next will show additional proverbs that fit the search until there are no more that fit the search.</p>
             <p>The Notes widget displays your current notes, with a number of buttons for editting and updating them.</p>
             <p>You can make a note into a proverb, but it will still be saved as a note until you delete it from your notes.</p>
             <p>This application as a whole auto-saves changes you make.</p>
             <p>The news widget displays current Go news headlines from the American Go Association Website.</p>
+            <p>In the news widget you can click next or previous (previous is a new feature, try it!)</p>
             <p><b>Make sure to run the GoStudyNodeV2.js with nodejs in order to use this app!</b></p>
         </span>
     </div>
@@ -57,7 +59,7 @@
         <br />
 
         <button id="newsNext" onclick="nextNews()">next</button>
-        <button id="loadSgfNews" onclick="loadNewsSgf()" hidden="true">Load News .sgf</button>
+        <button id="newsPrev" onclick="prevNews()">previous</button>
         <span class="tiptext">This area displays the headlines of recent articles from the American Go Association with a link to the article.</span>
     </div>
     <script src="goStudyV2.js"></script>
