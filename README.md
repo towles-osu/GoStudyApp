@@ -21,7 +21,4 @@ Go Study App is an auto-saving application designed for a single user.  There is
 collections of notes and proverbs on a given copy (but it is relatively small file wise, so if you want
 multiple discrete instances of go notes and proverbs just clone additional copies of this repository/release).
 
-Currently this application is still in development and so a number of basic log to the javascript console
-take place both in browser and on the node.js server.  These are left-in for the purpose of debugging,
-maintenance, and illustrating functionality in videos that must be submitted of this project
-since it is a class assignment for OSU's Software Engineering course.
+This application was developped as a class assignment for OSU's Software Engineering course.
