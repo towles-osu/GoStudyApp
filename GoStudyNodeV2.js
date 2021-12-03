@@ -34,7 +34,6 @@ function loadFile(source) {
 
 function saveFile(path, data) {
     fs.writeFileSync(path, JSON.stringify(data));
-    console.log("saved to file", path, data);
 }
 
 function getNews() {
@@ -42,7 +41,6 @@ function getNews() {
     return new Promise((resolve, reject) => {
         waitOn(waitOptions, function (err) {
             if (err) {
-                console.log("wait-on issue", err);
                 return reject(err);
             }
             let fileData = loadFile(file_path_to_news);
@@ -82,7 +80,6 @@ app.use(function (req, res) {
 });
 
 app.use(function (err, req, res, next) {
-    console.error(err.stack);
     res.status(500);
     res.send('Error 500: Something went wrong in the code');
 });

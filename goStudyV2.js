@@ -17,22 +17,18 @@ document.addEventListener("DOMContentLoaded", initialize);
 
 
 function showTutorial() {
-    
     let tutorial = document.getElementById("tutorialText");
-    console.log("tutorial clicked", tutorial.hidden);
     tutorial.hidden = (tutorial.hidden) ? false : true;
 }
 
 function toolTipChange(checkbox) {
     if (checkbox.checked) {
         let tooltipped = document.querySelectorAll(".notip");
-        console.log("adding tip", tooltipped)
         for (node in tooltipped) {
             tooltipped[node].className ="tip";
         }
     } else {
         let tooltipped = document.querySelectorAll(".tip");
-        console.log("removing tip", tooltipped)
         for (node in tooltipped) {
             tooltipped[node].className = "notip";
         }
@@ -58,9 +54,7 @@ function delCurProv(source = studyData) {
 }
 
 function initProverbs(source = studyData) {
-    console.log("init proverbs with", source);
     let curr_index = Math.floor(Math.random() * source.proverbs.length);
-    console.log(curr_index);
     source.currProv = curr_index;
     nextProverb();
 }
@@ -68,7 +62,6 @@ function initProverbs(source = studyData) {
 function nextProverb(source = studyData) {
     let span = document.getElementById("currProverb");
     if (source.activeProvSearch == false) {
-        console.log(source.currProv);
         source.currProv++;
         source.currProv = source.currProv % source.proverbs.length;
         span.innerText = source.proverbs[source.currProv];
@@ -168,7 +161,6 @@ function addNoteRow(note, noteNum) {
 
 function saveNote() {
     let note = document.getElementById("noteInput");
-    console.log(note.value);
     studyData.notes.push(note.value);
     note.value = "";
     let notesDisplay = document.getElementById("NoteTable");
@@ -186,7 +178,6 @@ function delRow(event) {
         let index = elId.lastIndexOf("e") + 1;
         let noteNumber = elId.slice(index);
         index = parseInt(noteNumber);
-        console.log("deleting note ", index);
         studyData.notes.splice(index, 1);
         noteRow.remove();
         saveToFile();
@@ -195,10 +186,7 @@ function delRow(event) {
 
 
 function editRow(event) {
-
-    let noteRow = event.srcElement.parentNode.parentNode;//this is the note
-    console.log(noteRow, noteRow.firstChild);
-    console.log("setting content editable for", noteRow.firstChild.firstChild);
+    let noteRow = event.srcElement.parentNode.parentNode;
     noteRow.firstChild.firstChild.setAttribute("contenteditable", "true");
     let button = event.srcElement;
     button.setAttribute("class", "saveNote");
@@ -212,7 +200,7 @@ function editRow(event) {
     event.srcElement.parentNode.append(button);
     button.addEventListener("click", revertNote);
 }
-//
+
 
 function revertNote(event) {
     let noteIndex = event.srcElement.parentNode.parentNode.id.slice(4);
@@ -256,7 +244,6 @@ function populateWidgets() {
 
 async function saveToFile() {
     let saveResults = await fetch(node_url + "save", post_req_gen({ type: "saveAll", "file_path": saveFilePath, data: studyData }));
-    console.log(saveResults);
 }
 
 async function initialize() {
@@ -264,7 +251,5 @@ async function initialize() {
     studyData = await loadResult.json();
     const loadNews = await fetch(node_url + "load", post_req_gen({ type: "loadNews" }));
     newsData.data = await loadNews.json();
-    console.log(newsData);
     populateWidgets(); 
-
 }
