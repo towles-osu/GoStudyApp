@@ -10,7 +10,7 @@ const child_process = require('child_process');
 const waitOn = require('wait-on');
 const file_path_to_news_service = 'NewsScraper/usgoScraper/goNewsScraper.py';
 const file_path_to_news = 'usgoNews.json';
-const waitOptions = {
+const wait_options = {
     resources: [file_path_to_news],
     delay: 500,
     simultaneous: 1,
@@ -27,7 +27,6 @@ app.use(cors());
 
 
 function loadFile(source) {
-
     let data = fs.readFileSync(source);
     return JSON.parse(data);
 }
@@ -36,10 +35,20 @@ function saveFile(path, data) {
     fs.writeFileSync(path, JSON.stringify(data));
 }
 
+function deleteOldNews() {
+    try {
+        fs.unlinkSync(file_path_to_news);
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
 function getNews() {
+    deleteOldNews();
     let result = child_process.exec("python3 " + file_path_to_news_service);
     return new Promise((resolve, reject) => {
-        waitOn(waitOptions, function (err) {
+        waitOn(wait_options, function (err) {
             if (err) {
                 return reject(err);
             }
@@ -60,8 +69,8 @@ app.post('/load', async (req, res, next) => {
         res.send(JSON.stringify(file_data));
     }
     else if (req.body.type == "loadNews") {
-        let newsData = await getNews();
-        res.send(JSON.stringify(newsData));
+        let news_data = await getNews();
+        res.send(JSON.stringify(news_data));
 
     }
 
